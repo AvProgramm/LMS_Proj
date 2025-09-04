@@ -56,3 +56,13 @@ CREATE TABLE course_draft (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- ENROLLMENT
+CREATE TABLE enrollment (
+    enrollment_id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES student_profile(student_profile_id),
+    course_id INT REFERENCES course(course_id),
+    enrolled_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(student_id, course_id)
+);
+
+
