@@ -19,3 +19,20 @@ CREATE TABLE users (
 );
 
 
+-- STUDENT PROFILE
+CREATE TABLE student_profile (
+    student_profile_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
+    full_name VARCHAR(255) NOT NULL,
+    student_no VARCHAR(50) UNIQUE NOT NULL,
+    locked_at TIMESTAMP
+);
+
+-- INSTRUCTOR PROFILE
+CREATE TABLE instructor_profile (
+    instructor_profile_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
+    full_name VARCHAR(255) NOT NULL,
+    staff_no VARCHAR(50) UNIQUE NOT NULL
+);
+
