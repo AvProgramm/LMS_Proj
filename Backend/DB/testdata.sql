@@ -79,4 +79,29 @@ SET title                = EXCLUDED.title,
     status               = EXCLUDED.status,
     owner_instructor_id  = EXCLUDED.owner_instructor_id;
 
+-- ============ COURSE DRAFTS ============
+-- No unique constraint on drafts, so use WHERE NOT EXISTS to keep idempotent.
+WITH src(title, outline_json, created_by_email, for_course_code, is_selected) AS (
+  VALUES
+    ('Intro to Python - v1', '{"weeks":6}'::json,  'jane@instructor.edu', 'FIT101', false),
+    ('Intro to Python - v2', '{"weeks":8}'::json,  'jane@instructor.edu', 'FIT101', true),
+    ('Databases 1 - draft A','{"modules":5}'::json,'mark@instructor.edu', 'FIT102', true)
+),
+resolved AS (
+  SELECT s.title, s.outline_json, s.is_selected,
+         ip.instructor_profile_id AS created_by,
+         c.course_id
+  FROM src s
+  JOIN users u              ON u.email = s.created_by_email
+  JOIN instructor_profile ip ON ip.user_id = u.user_id
+  LEFT JOIN course c         ON c.code  = s.for_course_code
+)
+INSERT INTO course_draft (course_id, title, outline_json, created_by, is_selected)
+SELECT r.course_id, r.title, r.outline_json, r.created_by, r.is_selected
+FROM resolved r
+WHERE NOT EXISTS (
+  SELECT 1 FROM course_draft d
+  WHERE d.title = r.title AND d.created_by = r.created_by
+);
+
 
