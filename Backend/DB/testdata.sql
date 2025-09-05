@@ -42,3 +42,22 @@ ON CONFLICT (student_no) DO UPDATE
 SET full_name = EXCLUDED.full_name,
     user_id   = EXCLUDED.user_id;
 
+-- ============ INSTRUCTOR PROFILE ============
+-- Uses staff_no as the natural key (UNIQUE in your schema)
+WITH raw(full_name, staff_no, email) AS (
+  VALUES
+    ('Jane Smith', 'T3001', 'jane@instructor.edu'),
+    ('Mark Lee',   'T3002', 'mark@instructor.edu')
+),
+src AS (
+  SELECT r.full_name, r.staff_no, u.user_id
+  FROM raw r
+  JOIN users u ON u.email = r.email
+)
+INSERT INTO instructor_profile AS ip (user_id, full_name, staff_no)
+SELECT s.user_id, s.full_name, s.staff_no
+FROM src s
+ON CONFLICT (staff_no) DO UPDATE
+SET full_name = EXCLUDED.full_name,
+    user_id   = EXCLUDED.user_id;
+
