@@ -10,13 +10,13 @@
   margin: 0;
   letter-spacing: 0.25em;
   font-weight: 800;
-  font-size: clamp(26px, 4.8vw, 46px);
-  color: #0f9db0; /* headline teal like your mock */
+  font-size: clamp(26px, 4.8vw, 35px);
+  color: #0f9db0; 
 }
 
 .card {
   margin: 0 auto;
-  max-width: 1100px;
+  max-width: 1500px;
   min-height: 360px;
   background: #f7f8fb;
   border-radius: 18px;
