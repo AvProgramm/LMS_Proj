@@ -4,7 +4,7 @@
 BEGIN;
 
 -- Work inside our app schema
-SET search_path TO lms_schema;
+SET search_path = lms_schema;
 
 -- ============ USERS (PostgreSQL upsert) ============
 WITH src(email, password_hash, role) AS (
@@ -104,4 +104,23 @@ WHERE NOT EXISTS (
   WHERE d.title = r.title AND d.created_by = r.created_by
 );
 
+-- ============ ENROLLMENTS ============
+WITH src(student_email, course_code) AS (
+  VALUES
+    ('alice@student.edu','FIT101'),
+    ('bob@student.edu',  'FIT101'),
+    ('carol@student.edu','FIT102')
+),
+resolved AS (
+  SELECT sp.student_profile_id AS student_id, c.course_id
+  FROM src s
+  JOIN users u          ON u.email = s.student_email
+  JOIN student_profile sp ON sp.user_id = u.user_id
+  JOIN course c         ON c.code   = s.course_code
+)
+INSERT INTO enrollment AS e (student_id, course_id)
+SELECT r.student_id, r.course_id
+FROM resolved r
+ON CONFLICT (student_id, course_id) DO NOTHING;
 
+COMMIT;
