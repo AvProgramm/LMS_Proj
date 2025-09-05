@@ -1,9 +1,10 @@
 -- Sprint 1 seed (idempotent). Re-runnable and transactional.
 -- Order: users -> profiles -> courses -> drafts -> enrollments
 
--- Switch default schema
-SET search_path TO lms_schema;
+BEGIN;
 
+-- Work inside our app schema
+SET search_path TO lms_schema;
 
 -- ============ USERS (PostgreSQL upsert) ============
 WITH src(email, password_hash, role) AS (
@@ -21,9 +22,7 @@ ON CONFLICT (email) DO UPDATE
 SET password_hash = EXCLUDED.password_hash,
     role           = EXCLUDED.role;
 
-
-    -- ============ STUDENT PROFILE ============
--- Uses student_no as the natural key (UNIQUE in your schema)
+-- ============ STUDENT PROFILE ============
 WITH raw(full_name, student_no, email) AS (
   VALUES
     ('Alice Tan', 'S1001', 'alice@student.edu'),
@@ -43,7 +42,6 @@ SET full_name = EXCLUDED.full_name,
     user_id   = EXCLUDED.user_id;
 
 -- ============ INSTRUCTOR PROFILE ============
--- Uses staff_no as the natural key (UNIQUE in your schema)
 WITH raw(full_name, staff_no, email) AS (
   VALUES
     ('Jane Smith', 'T3001', 'jane@instructor.edu'),
@@ -60,4 +58,25 @@ FROM src s
 ON CONFLICT (staff_no) DO UPDATE
 SET full_name = EXCLUDED.full_name,
     user_id   = EXCLUDED.user_id;
+
+-- ============ COURSES (owner = instructor) ============
+WITH src(code, title, status, owner_email) AS (
+  VALUES
+    ('FIT101', 'Intro to Python', 'published', 'jane@instructor.edu'),
+    ('FIT102', 'Databases 1',     'draft',     'mark@instructor.edu')
+),
+owners AS (
+  SELECT s.code, s.title, s.status, ip.instructor_profile_id AS owner_instructor_id
+  FROM src s
+  JOIN users u ON u.email = s.owner_email
+  JOIN instructor_profile ip ON ip.user_id = u.user_id
+)
+INSERT INTO course AS c (code, title, status, owner_instructor_id)
+SELECT o.code, o.title, o.status, o.owner_instructor_id
+FROM owners o
+ON CONFLICT (code) DO UPDATE
+SET title                = EXCLUDED.title,
+    status               = EXCLUDED.status,
+    owner_instructor_id  = EXCLUDED.owner_instructor_id;
+
 
