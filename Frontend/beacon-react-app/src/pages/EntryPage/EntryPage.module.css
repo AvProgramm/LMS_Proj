@@ -89,13 +89,13 @@
 }
 
 .logoImg {
-  width: clamp(120px, 40vw, 800px); /* responsive: min 120px, max 260px */
+  width: clamp(120px, 40vw, 800px);
   height: auto;
 }
 
 .slogan {
   margin-top: 16px;
-  font-size: clamp(16px, 2vw, 22px); /* scales with screen */
+  font-size: clamp(16px, 2vw, 22px);
   letter-spacing: 1.5px;
   color: #222;
   text-align: center;

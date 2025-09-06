@@ -4,13 +4,12 @@ import s from "./StudentTopBar.module.css";
 export default function StudentTopBar() {
   return (
     <header className={s.topBar}>
-      {/* LEFT SIDE - Logo + Title */}
-      <div className={s.leftSide}>
+
+     <NavLink to="/" className={s.leftSide}>
         <img src="/logo.svg" alt="Beacon logo" className={s.logo} />
         <h1 className={s.title}>B E A C O N</h1>
-      </div>
+      </NavLink>
 
-      {/* RIGHT SIDE - Navigation */}
       <nav className={s.rightSide} aria-label="Student navigation">
         <ul className={s.navList}>
           <li className={s.navItem}>

@@ -11,7 +11,7 @@
   letter-spacing: 0.25em;
   font-weight: 800;
   font-size: clamp(26px, 4.8vw, 35px);
-  color: #0f9db0; 
+  color: #0f9db0;
 }
 
 .card {
@@ -21,8 +21,7 @@
   background: #f7f8fb;
   border-radius: 18px;
   border: 2px solid transparent;
-  background-image:
-    linear-gradient(#f7f8fb, #f7f8fb),
+  background-image: linear-gradient(#f7f8fb, #f7f8fb),
     linear-gradient(180deg, var(--bg-right-top), var(--bg-right-bot));
   background-origin: border-box;
   background-clip: padding-box, border-box;
@@ -34,7 +33,7 @@
 .emptyText {
   margin: 0 0 18px;
   text-align: center;
-  color: #175e69; /* deep teal copy */
+  color: #175e69;
   font-size: clamp(14px, 2.2vw, 18px);
 }
 
@@ -55,4 +54,11 @@
 
 .arrow {
   display: inline-block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(16px, 3vw, 28px);
+  margin-top: 20px;
 }

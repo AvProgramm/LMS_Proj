@@ -1,22 +1,21 @@
 .topBar {
   width: 100%;
   display: flex;
-  justify-content: space-between; /* left: title, right: nav */
+  justify-content: space-between;
   align-items: center;
   padding: clamp(12px, 2vw, 15px) 4rem;
-  background: linear-gradient(
-    to bottom,
-    #71bfcd 0%,  /* start orange at top */
-    #b6c2ae  70%, /* orange till 70% */
-    #f1cea8 100% 
-  );
+  background: linear-gradient(to bottom, #71bfcd 0%, #b6c2ae 70%, #f1cea8 100%);
   border-bottom: 2px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
 
 .leftSide {
   display: flex;
   align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;       
 }
 
 .title {
@@ -39,19 +38,19 @@
 
 .navItem {
   display: flex;
-  flex-direction: column; /* stack image above text */
+  flex-direction: column;
   align-items: center;
   cursor: pointer;
   font-weight: 500;
   font-size: clamp(14px, 1.8vw, 18px);
-  color: #000000;
+  color: #07464f;
 }
 
 .profileLogoTop {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-bottom: 4px; /* space between picture and text */
+  margin-bottom: 4px;
 }
 
 .accountText {
@@ -61,17 +60,17 @@
 .leftSide {
   display: flex;
   align-items: center;
-  gap: 12px; /* space between logo and title */
+  gap: 12px;
 }
 
 .logo {
-  height: clamp(28px, 12vh, 80px); /* responsive, capped */
+  height: clamp(28px, 12vh, 80px);
   width: auto;
 }
 
 .navLink {
   text-decoration: none;
-  color: inherit;    /* keeps your nav color */
+  color: inherit;
   cursor: pointer;
 }
 .navLink:hover {
