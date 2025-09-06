@@ -4,7 +4,6 @@ import Button from "../../components/Button/Button";
 import s from "./EntryPage.module.css";
 import { useNavigate } from "react-router-dom";
 
-
 export default function EntryPage() {
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
@@ -20,7 +19,9 @@ export default function EntryPage() {
       {/* LEFT PANEL */}
       <section className={s.left}>
         <div className={s.logoWrap}>
-          <img src="/logo.svg" alt="Beacon Logo" className={s.logoImg} />
+          <div className={s.logoCircle}>
+            <img src="/logo.svg" alt="Beacon Logo" className={s.logoImg} />
+          </div>
           <div className={s.slogan}>“Brillare Luminoso”</div>
         </div>
       </section>
@@ -30,11 +31,19 @@ export default function EntryPage() {
         <div className={s.card}>
           <h1 className={s.title}>Choose</h1>
           <div className={s.buttons}>
-            <Button variant="teal" onClick={() => go("student")}>
+            <Button
+              variant="teal"
+              className={s.entryBtn}
+              onClick={() => go("student")}
+            >
               Student
             </Button>
             <div className={s.or}>OR</div>
-            <Button variant="orange" onClick={() => go("instructor")}>
+            <Button
+              variant="orange"
+              className={s.entryBtn}
+              onClick={() => go("instructor")}
+            >
               Instructor
             </Button>
           </div>

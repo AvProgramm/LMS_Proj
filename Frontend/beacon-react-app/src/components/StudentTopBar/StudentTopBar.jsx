@@ -50,7 +50,7 @@ export default function StudentTopBar() {
 
           <li className={s.navItem}>
             <img
-              src="/profile_picture.png" // replace with your profile image path
+              src="/profile_picture.png"
               alt="Profile"
               className={s.profileLogoTop}
             />

@@ -74,5 +74,6 @@
   cursor: pointer;
 }
 .navLink:hover {
-  text-decoration: underline;
+  color: white;
+  opacity: 87%;
 }

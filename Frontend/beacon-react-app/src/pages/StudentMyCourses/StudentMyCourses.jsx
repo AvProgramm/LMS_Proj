@@ -60,7 +60,7 @@ export default function StudentMyCourses() {
                 course={c}
                 ctaText="View"
                 onClick={() => {
-                  // TODO: navigate to a student course detail page
+                  // To implement in the future
                   console.log("Viewing course:", c.id);
                 }}
               />
