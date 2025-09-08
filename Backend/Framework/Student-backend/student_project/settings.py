@@ -69,7 +69,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True #App running at one origin (React)
-
+#CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8000/"]
 ROOT_URLCONF = "student_project.urls"
 
 TEMPLATES = [
@@ -98,14 +98,14 @@ WSGI_APPLICATION = "student_project.wsgi.application"
 #Go to Postgresql, choose variables, enter the values below according to those 
 DATABASES = {
     "default": {
-        #"ENGINE": "django.db.backends.sqlite3",
-        "ENGINE": "django.db.backends.postgresql",
-        #"NAME": BASE_DIR / "db.sqlite3",
-        'NAME': "", #"PGDATABASE"],
-        'USER': "", #os.environ["PGUSER"],
-        'PASSWORD': "", #os.environ["PGPASSWORD"],
-        'HOST': "", #os.environ["PGHOST"],
-        'PORT': "", #os.environ["PGPORT"],
+        "ENGINE": "django.db.backends.sqlite3",
+        #"ENGINE": "django.db.backends.postgresql",
+        "NAME": BASE_DIR / "db.sqlite3",
+        #'NAME': "", #"PGDATABASE"],
+        #'USER': "", #os.environ["PGUSER"],
+        #'PASSWORD': "", #os.environ["PGPASSWORD"],
+        #'HOST': "", #os.environ["PGHOST"],
+        #'PORT': "", #os.environ["PGPORT"],
 
     }
 }

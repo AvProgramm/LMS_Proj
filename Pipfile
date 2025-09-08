@@ -8,8 +8,8 @@ asgiref = "==3.9.1"
 sqlparse = "==0.5.3"
 django = "*"
 djangorestframework = "*"
-django-cors-headers = "*"
 djangorestframework-simplejwt = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

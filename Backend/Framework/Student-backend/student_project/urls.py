@@ -19,19 +19,19 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter 
 
-from student_app.views import StudentLogin, is_authenticated, StudentRegistration, StudentEnrolledCourses, StudentUnenrolledCourses
+from student_app.views import StudentEnrolledCourses, StudentUnenrolledCourses
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
 urlpatterns = [
+    path('students/<int:student_id>/my_courses/', StudentEnrolledCourses.as_view(), name='enrolled'),
+    path('students/<int:student_id>/enrollment/', StudentUnenrolledCourses.as_view(), name='unenrolled'),
+   
     path("admin/", admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 
-    path('authenticated/', is_authenticated),
     #path('login/', StudentLogin),
     #path('register/', StudentRegistration.as_view()),
-    path('enrollment/',StudentUnenrolledCourses),
-    path('my_courses/', StudentEnrolledCourses)
 ]

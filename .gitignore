@@ -1,1 +1,10 @@
-venv/ 
+# Python
+*.pyc
+__pycache__/
+db.sqlite3
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
