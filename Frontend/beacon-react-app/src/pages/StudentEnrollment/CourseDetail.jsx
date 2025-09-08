@@ -5,16 +5,19 @@ import Button from "../../components/Button/Button";
 import courses from "../../data/courses";
 import { useEnrollment } from "../../state/EnrollmentContext";
 import s from "./CourseDetail.module.css";
+import React, {useEffect, useState} from "react";
 
 export default function CourseDetail() {
-  const { courseId } = useParams();
-  const navigate = useNavigate();
-  const { enroll, isEnrolled } = useEnrollment();
-
+  
   const course = useMemo(
     () => courses.find((c) => c.id === courseId),
     [courseId]
   );
+
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const { enroll, isEnrolled } = useEnrollment();
+
 
   if (!course) {
     return (
