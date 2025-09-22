@@ -13,9 +13,15 @@ import InstructorLessonDetail from "./pages/Instructor/Instructor Lesson Detail/
 import InstructorClassCreation from "./pages/Instructor/Instructor Class Creation/InstructorClassCreation"; 
 import StudentLessonDetail from "./pages/Student/StudentLessonDetail/StudentLessonDetail"
 
-
+// import InstructorLessonCreation from "./pages/InstructorLessonCreation";
+import InstructorLessonCreate from "./pages/Instructor/Instructor Lesson Create/InstructorLessonCreate";
+import InstructorLessonList from "./pages/Instructor/Instructor Lesson List/InstructorLessonList";
+import InstructorLessonCreation from "./pages/Instructor/Instructor Lesson Creation/InstructorLessonCreation";
+import StudentMyLessonsPage from "./pages/Student/StudentMyLessonsPage/StudentMyLessonsPage";
 import axios from 'axios';
 import React, {useState, useEffect} from "react";
+import StudentLessonEnroll from "./pages/Student/StudentLessonEnroll/StudentLessonEnroll";
+import StudentLessonDetail from "./pages/Student/StudentLessonDetail/StudentLessonDetail";
   
 export default function App(){
   const [details, setDetails] = useState([]);
@@ -53,6 +59,15 @@ export default function App(){
       <Route path="/instructor/course/:courseId/lesson/:lessonId" element={<InstructorLessonDetail />}/>
       <Route path="/instructor/course/:courseId/lesson/:lessonId/classroom/new" element={<InstructorClassCreation />}/>
       <Route path="/student/course/:courseId/lesson/:lessonId" element={<StudentLessonDetail />}/>
+      <Route path="/instructor/course/:courseId/lessons" element={<InstructorLessonCreation />} />
+      <Route path="/instructor/course/:courseId/lesson-list" element={<InstructorLessonList />} />
+      {/* <Route path="/instructor/course/:courseId/lesson-create" element={<InstructorLessonCreate />} /> */}
+      {/* Changed from Isabella version */}
+      <Route path="/instructor/course/:courseId/lesson-creation" element={<InstructorLessonCreate />} /> 
+      <Route path="/student/my-lesson" element={<StudentMyLessonsPage />} /> 
+      <Route path="/student/lesson-enrollment" element={<StudentLessonEnroll />} /> 
+      <Route path="/student/lesson-detail" element={<StudentLessonDetail />} /> 
+      
     </Routes>
   </div>
   );

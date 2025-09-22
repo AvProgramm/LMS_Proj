@@ -1,8 +1,15 @@
 from django.contrib import admin
-from .models import *
+from .models import Course, Student
 # Register your models here.
+class LessonInLine(admin.TabularInline):
+    model = Lesson
+    extra = 1
 
-admin.site.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    inlines = [LessonInLine]
+
+
+admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseDraft)
 admin.site.register(StudentProfile)
 admin.site.register(InstructorProfile)

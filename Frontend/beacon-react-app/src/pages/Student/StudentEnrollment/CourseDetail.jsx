@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import StudentTopBar from "../../../components/StudentTopBar/StudentTopBar";
 import Button from "../../../components/Button/Button";
 //import { useEnrollment } from "../../state/EnrollmentContext";
+import courses from "../../../data/courses";
+import { useEnrollment } from "../../../state/EnrollmentContext";
 import s from "./CourseDetail.module.css";
 import axios from "axios";
 

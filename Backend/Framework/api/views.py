@@ -29,28 +29,17 @@ from .models import *
 from .auth import CustomJWTAuthentication
 
 
+# Create your views here.
+def course_creation(request):
+    if request.method == 'POST':
+        form = CoursesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('create_courses')
+    else:
+        form = CoursesForm()
 
-"""
-Shared Part
-"""
-class UserLogout(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-class CurrentUser(RetrieveAPIView):#Receiving a single object, read-only
-    authentication_classes = [CustomJWTAuthentication] 
-    permission_classes = [IsAuthenticated]
-    serializer_class = CurrentUserSerializer
-    def get_object(self):
-        return self.request.user #According to the json upon logged in, the user nested content
-
+    return render(request, 'course.html', {'form' : form})
 
 """
 Instructor Part
@@ -304,89 +293,20 @@ class StudentUnenrolledCourses(APIView):
         return Response(output, status=status.HTTP_200_OK)
     
     def post(self, request, student_profile_id):
-        """
-        Enroll a student
-        - Look for the student 
-        - Create new Enrollment objects
-        """
-        student = get_object_or_404(StudentProfile, pk=student_profile_id)
-        #Checking if course id is present and if student has already enrolled 
-        serializer = EnrollmentSerializer(
-            data=request.data,
-            context={"student": student}, 
-        )
-        serializer.is_valid(raise_exception=True)
-        enrollment = serializer.save()
-        return Response(EnrollmentSerializer(enrollment).data, status=201)
+        student = get_object_or_404(Student, student_profile_id=student_profile_id)
+        course_id = request.data.get("course_id")
+        if not course_id:
+            return Response({"detail": "course_id is required"})
 
-class StudentUnenrolledClassrooms(APIView): 
-    """
-    TODO: change to authentication by removing student_profile_id.
-    adding 
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [CustomJWTAuthentication] 
-    """
-    permission_classes = [AllowAny]
-    def get(self, request, student_profile_id, pk):
-        student = get_object_or_404(StudentProfile, student_profile_id=student_profile_id)
-        lesson = Lesson.objects.get(lesson_id = pk)
-        unenrolled_classrooms = Classroom.objects.filter(lesson=lesson, is_active=True).exclude(classroomenrollment__student=student).distinct()
-        output =[{
-                "day_of_week": classroom.day_of_week,
-                "time_start": classroom.time_start,
-                "time_end": classroom.time_end,
-                "instructor": classroom.instructor.full_name,
-                    } for classroom in unenrolled_classrooms]
-        return Response(output,  status=status.HTTP_200_OK)
-    
-    def post(self, request, student_profile_id):
-        """
-        Enroll a student
-        - Look for the student 
-        -Ensure not exceed capacity 
-        - Create new object
-        """
-        student = get_object_or_404(StudentProfile, pk=student_profile_id)
-        serializer = ClassroomEnrollmentSerializer(
-            data=request.data,
-            context={"student": student},
-        )
-        serializer.is_valid(raise_exception=True)
-        enrollment = serializer.save()#Creating a new enrollment object
-        return Response(ClassroomEnrollmentSerializer(enrollment).data, status=201)
+        course = get_object_or_404(Course, pk=course_id)
 
-class StudentEnrolledClassrooms(APIView): 
-    permission_classes = [AllowAny]
-    def get(self, request, student_profile_id, pk):
-        student = get_object_or_404(StudentProfile, student_profile_id=student_profile_id)
-        lesson = Lesson.objects.get(lesson_id = pk)
-        enrolled_classrooms = Classroom.objects.filter(lesson=lesson,is_active = True).exclude(classroomenrollment__student=student).distinct()
-        output =[{
-                "day_of_week": classroom.day_of_week,
-                "time_start": classroom.time_start,
-                "time_end": classroom.time_end,
-                "instructor": classroom.instructor.full_name,
-                    } for classroom in enrolled_classrooms]
-        return Response(output,  status=status.HTTP_200_OK)
-    
-"""
-Shared
-"""
-#For getting a single course, no list and no post method
-@method_decorator(csrf_exempt, name='dispatch')
-class CourseDetailView(APIView):
-    #permission_classes = [IsAuthenticated]
-    #authentication_classes = [CustomJWTAuthentication] 
-    def get(self, request, pk):
-        """
-        GET method. Fetching course and returning a customised json response
-        """
-        course = Course.objects.get(course_id=pk)
-        output = {
-            "course_id": course.course_id,
-            "course_title": course.title,
-            "course_credits": course.credits,
-            "course_director": course.owner_instructor.full_name,
-            "course_description": course.description}
-        return Response(output, status=status.HTTP_200_OK)
-    
+        if student.courses.filter(pk=course.pk).exists():
+            # idempotent: already enrolled
+            return Response(
+                {"detail": "Student already enrolled", "course": CourseSerializer(course).data},
+            )
+
+        student.courses.add(course)
+        return Response(CourseSerializer(course).data)
+
+

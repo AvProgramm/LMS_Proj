@@ -42,6 +42,32 @@ class LoginSerializer(serializers.Serializer):
 class CurrentUserSerializer(serializers.ModelSerializer):
     instructor_profile_id = serializers.SerializerMethodField() #An added field
     instructor_full_name = serializers.SerializerMethodField()
+from .models import Course, Student, Lesson
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ["course_title", "course_id", "course_credits", "course_director", "course_description"]
+
+class LessonSerializer(serializers.ModelSerializer):
+    # course_id = serializers.PrimaryKeyRelatedField(
+    #     source="courses", queryset=Course.objects.all(),
+    #     write_only=True, required=False
+    # )
+    # courses = CourseSerializer(read_only=True)
+    courses = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+
+    class Meta:
+        model = Lesson
+        fields = ["lesson_id", "lesson_title", "lesson_credits", "lesson_duration", "lesson_description", "lesson_objective", "lesson_prerequisite", "courses"]
+        # read_only_fields = ["lesson_title"]
+
+class StudentSerializer(serializers.ModelSerializer):
+    course_ids = serializers.PrimaryKeyRelatedField(
+        many=True, source="courses", queryset=Course.objects.all(),
+        write_only=True, required=False
+    )
+    courses = CourseSerializer(many=True, read_only=True)
 
     class Meta:
         model = User

@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../components/Button/Button";
 import i from "./StudentLessonDetail.module.css";
 import StudentTopBar from "../../../components/StudentTopBar/StudentTopBar";
@@ -275,7 +278,6 @@ export default function StudentLessonDetail() {
       <div className={i.topBar}>
         <StudentTopBar />
       </div>
-
       <header className={i.header}>
         <div className={i.rect}>
           <div className={i.courseInfo}>

@@ -11,31 +11,32 @@ export default function InstructorCourseDescription() {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const { enroll, isEnrolled } = useEnrollment();
+  const [showLessons, setShowLessons] = useState(false);
+  const [showStudents, setShowStudents] = useState(false);
+  const [students, setStudents] = useState([{ id: "1", name: "Amina Hassan", email: "amina.hassan13@beaccon.edu" },
+  { id: "2", name: "Kenji Sato", email: "kenji21sato@beacon.edu" },]); //mock data
 
   // const course = useMemo(
-  //   () => courses.find((c) => c.id === courseId), Ahh db problem.
+  //   () => courses.find((c) => c.id === courseId),
   //   [courseId]
   // );
   const [course, setCourse] = useState(null);
+  const LESSON_SLOTS = 5;
+  const [lessons, setLessons] = useState([]);
 
-  /**
-   * GET method to show course details according courseId routing 
-   */
   useEffect(() => {
-    axios //TODO: change to api
-      .get(`http://localhost:8000/courses/${courseId}/detail/`)
-      .then((res) => setCourse(res.data))
-      .catch(() => setCourse(null));
-  }, [courseId]);
+  axios.get(`http://localhost:8000/courses/frontend/${courseId}/`)
+    .then((res) => {
+      setCourse(res.data);
 
-
-  /**
-   * Placeholder for lesson rerouting 
-   * @param {*} lessonId 
-   */
-  const handleGoToLesson = (lessonId = "SH0676") => {
-    navigate(`/instructor/course/${courseId}/lesson/${lessonId}`);
-  };
+      if (res.data.course_id) {
+        axios.get(`http://localhost:8000/lessons/course/${res.data.course_id}/`)
+          .then((resLessons) => setLessons(resLessons.data))
+          .catch(() => setLessons([]));
+      }
+    })
+    .catch(() => setCourse(null));
+}, [courseId]);
 
   if (!course) {
     return (
@@ -80,18 +81,226 @@ export default function InstructorCourseDescription() {
             ) : (
               <span className={s.noLessons}>No lessons</span>
             )}
+          {/* can delete button if not needed here */}
+          </div>
+          <div className={s.lessonActions}>
+            <Button
+            className={s.addLessonBtn}
+            // style={{ backgroundColor: "orange", padding: "8px", marginTop: "12px" }}
+              // className={s.addLessonBtn}
+              onClick={() =>
+                navigate(`/instructor/course/${course.course_id}/lesson-create`)
+              }
+            >
+              + Add Lesson
+            </Button>
+            <Button
+              className={s.viewLessonsBtn}
+                onClick={() =>
+                  navigate(`/instructor/course/${course.course_id}/lesson-list`)
+                }
+              >
+                View Lessons
+              </Button>
+          </div>
+          <br />
+          <br />
+          <Button variant="orange"
+                      className={s.enrollBtn}
+                      onClick={() => navigate("/instructor/course-list")}
+                    >
+                      <span>Back to Courses</span>
+                      <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 8 16 12 12 16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+                    </Button>
           </div>
         </div>
+    <div className={s.wrap}>
+  <div className={s.row1}>
+    <div
+  className={s.panel1}
+  onClick={() => setShowStudents(!showStudents)}
+  style={{ cursor: "pointer" }}
+>
+  <h2 className={s.label}>Enrolled Students</h2>
+</div>
 
-  
-        <button  // Button to go to lesson detail from course detail placeholder for testing purposes
-          className="goLessonsCta" 
-          onClick={() => handleGoToLesson()}
-          type="button"
-        >
-          Go to my course lessons detail
-        </button>
+    <div className={s.panel1}
+      onClick={() => setShowLessons(!showLessons)} 
+     style={{ cursor: "pointer" }}>
+  <h2 className={s.label}>Lessons</h2>
+    </div>
+
+    <div className={s.panel1}>
+      <h2 className={s.label}>Active Classrooms</h2>
+    </div>
+  </div>
+</div>
+{showLessons && (
+  <div className={s.lessonsCard}>
+    <h2 className={s.lessonsLabel}>Lessons</h2>
+
+    <div className={s.container}>
+      {Array.from({ length: LESSON_SLOTS }).map((_, idx) => {
+        const lesson = lessons[idx];
+
+        return (
+          <div key={idx} className={s.card} style={{ cursor: "pointer" }}>
+            {lesson ? (
+              <>
+                <h2 className={s.cardTitle} >{lesson.lesson_title}</h2>
+                <div className={s.cardDesc1}>
+                  <div className={s.leftGroup}>
+                    <span>Code:</span>
+                    <span className={s.spacing}><strong>{lesson.lesson_id}</strong></span>
+                  </div>
+                </div>
+                <div className={s.cardDesc2}>
+                  <span>Course Director:</span>
+                  <span>{course.course_director}</span>
+                </div>
+                <div className={s.cardDesc3}>
+                  <span>Duration:</span>
+                  <span>{lesson.lesson_duration}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className={s.cardTitle}>Lesson {idx + 1}</h2>
+                <div className={s.cardDesc1}>
+                  <div className={s.leftGroup}>
+                    <span>Code:</span>
+                    {/* <span className={s.spacing}><strong>{lesson.lesson_id}</strong></span> */}
+                  </div>
+                </div>
+                <div className={s.cardDesc2}>
+                  <span>Course Director:</span>
+                  {/* <span>{course.course_director}</span> */}
+                </div>
+                <div className={s.cardDesc3}>
+                  <span>Duration:</span>
+                  {/* <span>{lesson.lesson_duration}</span> */}
+                </div>
+                <Button
+                  variant="orange"
+                  onClick={() =>
+                    navigate(`/instructor/course/${course.course_id}/lesson-creation`)
+                  }
+                >
+                  <span>Create</span>
+                </Button>
+              </>
+            )}
+            </div>
+        );
+      })}
+    </div>
+
+    {/* <div className={s.container}>
+      {course.lessons && course.lessons.length > 0 ? (
+        course.lessons.map((lesson, idx) => (
+          <div key={idx} className={s.card} style={{ cursor: "pointer" }}>
+            <h2 className={s.cardTitle}>{lesson.title}</h2>
+
+            <div className={s.cardDesc1}>
+        <div className={s.leftGroup}>
+          <span>Code:</span>
+          <span className={s.spacing}><strong>{lesson.code}</strong></span>
+        </div>
       </div>
-    </>
+
+      <div className={s.cardDesc2}>
+        <span>Course Director:</span>
+        <span>{lesson.director}</span>
+      </div>
+
+      <div className={s.cardDesc3}>
+        <span>Duration:</span>
+        <span>{lesson.duration}</span>
+      </div>
+    </div>
+        ))
+      ) : (
+        <div className={s.card} style={{ cursor: "pointer" }}>
+          <h2 className={s.cardTitle}>Lesson 1</h2>
+          <div className={s.cardDesc1}>
+            <div className={s.leftGroup}>
+              <span>Code:</span>
+            </div>
+          </div>
+          <div className={s.cardDesc2}>
+            <span>Course Director:</span>
+          </div>
+          <div className={s.cardDesc3}>
+            <span>Duration:</span>
+          </div>
+          <br />
+          <br />
+          <Button variant="orange"
+                      className={s.enrollBtn}
+                      onClick={() => navigate(`/instructor/course/${course.course_id}/lesson-creation`)}
+                    >
+                      <span>Create</span>
+                      <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 8 16 12 12 16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+                    </Button>
+        </div>
+      )}
+    </div> */}
+    </div>
+)}
+
+{showStudents && (
+  <div className={s.lessonsCard}>
+    <h2 className={s.lessonsLabel}>Enrolled Students</h2>
+    <h2 className={s.studentListLabel}>Number: 2</h2>
+
+    <div className={s.tableWrapper}>
+      <table className={s.studentTable}>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Student Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <tr key={student.id}>
+              <td>{student.name}</td>
+              <td>{student.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+</>
   );
 }

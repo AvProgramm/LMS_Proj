@@ -154,7 +154,6 @@ textarea.input {
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 14px;
-  color: gray;
 }
 
 .addButton {
@@ -277,15 +276,4 @@ textarea.input {
   transform: translateY(-50%);
   color: #8a8a8a;
   pointer-events: none;
-  width: 100vw;  
-  margin-left: calc(-1 * clamp(16px, 4vw, 40px)); 
-  margin-right: calc(-1 * clamp(16px, 4vw, 40px)); 
-  margin-top: calc(-1 * clamp(16px, 4vw, 40px));   
-  background: #fff; 
-}
-
-.addText {
-  color: #783e0c; 
-  font-weight: 600;
-  margin-left: 8px; 
 }
