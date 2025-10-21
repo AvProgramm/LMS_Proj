@@ -25,6 +25,14 @@
   gap: 10px;
   font-size: clamp(16px, 2.2vw, 20px);
   margin: 10px 30px 0 30px;
+  background-color: #f8a247;
+}
+
+.lessonFile {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
 }
 
 .button:hover {
@@ -33,7 +41,8 @@
 
 .enrollBtn:hover{
   transform: scale(1.05);
-  background-color: #71bfcd;
+  background-color: #fee0c0;
+  color: #fa972d;
   transform: translateY(-1px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
@@ -56,19 +65,21 @@
   width: 100%;
   padding: 20px 50px;
   box-sizing: border-box;
-
   grid-auto-rows: auto;
   align-content: start;
-  min-height: 0;       
+  min-height: 0;    
+  place-items: center;    
+  place-content: center;   
 }
 
 .wrap {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   overflow-y: auto;
   padding: clamp(16px, 4vw, 1px); 
   padding-top: 10vh;
-  
 }
 
 .card {
@@ -84,6 +95,7 @@
   box-sizing: border-box;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  margin-top:7px;
 }
 
 .card:hover {
@@ -96,6 +108,7 @@
 .cardTitle {
   font-size: 22px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .cardDesc1 {
@@ -124,4 +137,67 @@
 .leftGroup {
   display: flex;
   gap: 8px; 
+}
+
+.wraprow {
+  position: relative;
+  padding: clamp(16px, 4vw, 40px);
+  padding-top: 0;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.row1 {
+  display: flex;
+  gap: 8px;
+  padding-top: 0;
+}
+
+.panel1 {
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 5px 24px;
+  border-radius: 18px;
+  background: linear-gradient(to bottom, #f1cea8 0%, #f1cea8 70%, #71bfcd 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.panel1:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  background: rgb(255, 208, 147);
+}
+
+.label {
+  color: brown;
+  text-align: center;
+  font-size: 20px;
+}
+
+.tabActive {
+  box-shadow: inset 0 0 0 3px rgba(233, 109, 31, 0.35);
+}
+
+.profileLogoTop {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.studentInfoGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.studentInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }

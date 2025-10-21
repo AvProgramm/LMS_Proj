@@ -33,10 +33,11 @@ urlpatterns = [
     path("instructor/show/enrolled/", EnrolledStudentList.as_view(), name="show-enrolled"),
     #Whole enrolled student progress for either lesson or course
         #One course 
-    path("instructor/course/progress/<str:course_id>", ProgressView.InstructorCourseProgress.as_view()),
+    path("instructor/course/progress/<str:course_id>/", ProgressView.InstructorCourseProgress.as_view()),
         #One lesson 
-    path("instructor/lesson/progress/<str:lesson_id>", ProgressView.InstructorLessonProgress.as_view()),
-    path("instructor/student/progress/<str:student_profile_id>", ProgressView.InstructorStudentProgress.as_view()),
+    path("instructor/lesson/progress/<str:lesson_id>/", ProgressView.InstructorLessonProgress.as_view()),
+        #One student 
+    path("instructor/student/progress/<int:student_profile_id>/", ProgressView.InstructorStudentProgress.as_view()),
 
     #Instructors
     path("instructor/login/", InstructorLogin.as_view(), name="instructor-login"),
@@ -102,7 +103,7 @@ urlpatterns = [
     path("student/lessons/<str:lesson_id>/classrooms/unenrolled/", StudentUnenrolledViews.StudentUnenrolledClassrooms.as_view(), name="unenrolled-classrooms"),
     path("student/lessons/<str:lesson_id>/classrooms/enroll/<str:classroom_id>/", StudentUnenrolledViews.StudentUnenrolledClassrooms.as_view(), name="unenrolled-classrooms"),
     path("student/lessons/<str:lesson_id>/classrooms/enrolled/<str:classroom_id>/", StudentEnrolledViews.StudentEnrolledClassrooms.as_view(), name="unenrolled-classrooms"),
-
+    path("student/classrooms/viewing/", StudentClassrooms.as_view()),
     #Student Assignment
     path("student/lessons/<str:lesson_id>/assignments/", StudentAssignmentChecklistView.as_view(), name="student-lesson-assignment"),
     #Student Reading
