@@ -5,6 +5,8 @@
 
 .header {
   margin-bottom: clamp(1em, 3vw, 1.75em);
+  padding-left: 5vh;
+  
 }
 
 .title {
@@ -12,12 +14,12 @@
   letter-spacing: 0.25em;
   font-weight: 800;
   font-size: 2.5em;
-  color: #e4973f;
+  color: var(--brand-inst-title);
   text-align: left;
 }
 
 .formContainer {
-  background: linear-gradient(to right, #f1cea8 0%, #f1cea8 50%, #71bfcd 100%);
+  background: var(--brand-inst-form-gradient);
   padding: 1.875em;
   border-radius: 1.25em;
   box-shadow: 0 0.375em 0.75em rgba(0, 0, 0, 0.1);
@@ -62,7 +64,7 @@ textarea.input {
 .button {
   margin-right: 0.9375em;
   padding: 0.625em 1.25em;
-  background-color: #0f9db0;
+  background-color: var(--brand-inst-primary-orange);
   color: white;
   border: none;
   border-radius: 0.5em;
@@ -129,7 +131,7 @@ textarea.input {
 }
 
 .lessonItem {
-  background-color: #f6b773;
+  background-color: var(--brand-stud-background-orange);
   color: rgb(0, 0, 0);
   padding: 0.375em 0.625em;
   border-radius: 0.375em;
@@ -138,7 +140,7 @@ textarea.input {
 
 .addButton {
   padding: 0.3125em 0.625em;
-  background-color: #0f9db0;
+  background-color: var(--brand-stud-primary-orange);
   color: white;
   border: none;
   border-radius: 50px;
@@ -164,7 +166,7 @@ textarea.input {
 }
 
 .modalContent {
-  background: white;
+  background: var(--bg);
   padding: 1.5625em 1.875em;
   border-radius: 0.75em;
   max-width: 25em;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import s from "./InstructorTopBar.module.css";
+import ThemeToggle from "../../state/ThemeToggle";
 
 export default function InstructorTopBar() {
   const [fontSize, setFontSize] = useState(
@@ -29,16 +30,23 @@ export default function InstructorTopBar() {
             </a>
           </li>
           <li className={s.navItem}>
+            <a href="/instructor/studentlist" className={s.navLink}>
+              Students
+            </a>
+          </li>
+          <li className={s.navItem}>
             <a href="/instructor/classrooms" className={s.navLink}>
               Classrooms
             </a>
           </li>
           <li className={s.navItem}>
-            <a href="/instructor/student-progress" className={s.navLink}>
-              Student
+           <a href="/instructor/student-progress" className={s.navLink}>
+              Report
             </a>
           </li>
-          <li className={s.navItem}>Report</li>
+          <li className={s.navItem}>
+            <ThemeToggle />
+          </li>
           <li className={s.navItem}>
             <img
               src="/profile_picture.png"
