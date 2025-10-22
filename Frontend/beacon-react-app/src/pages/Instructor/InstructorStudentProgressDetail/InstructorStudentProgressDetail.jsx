@@ -5,561 +5,303 @@ import s from "./InstructorStudentProgressDetail.module.css";
 import Button from "../../../components/Button/Button";
 
 export default function InstructorCourseProgressDetail() {
-    const { courseId } = useParams();
-    const navigate = useNavigate();
-    const [course, setCourse] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [students, setStudents] = useState([]);
-    const [sortHighToLow, setSortHighToLow] = useState(true);
-    const [lessons, setLessons] = useState([]);
-    const [lessonSortBy, setLessonSortBy] = useState("duration");
-    const [lessonSortHighToLow, setLessonSortHighToLow] = useState(true);
-    const [activeTab, setActiveTab] = useState(null);
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [students, setStudents] = useState([]);
+  const [sortHighToLow, setSortHighToLow] = useState(true);
+  const [lessons, setLessons] = useState([]);
+  const [activeTab, setActiveTab] = useState(null);
 
-    const handleToggleLessons = () => {
-        const willOpen = activeTab !== "lessons";
-        setActiveTab(willOpen ? "lessons" : null);
+  const handleToggleLessons = () => {
+    const willOpen = activeTab !== "lessons";
+    setActiveTab(willOpen ? "lessons" : null);
 
-        if (willOpen) {
-            const mockLessons = [
-                {
-                    lesson_id: "L1",
-                    title: "Intro",
-                    designer: "Alice",
-                    duration_weeks: 2,
-                    enrolled_count: 10,
-                },
-                {
-                    lesson_id: "L2",
-                    title: "Advanced",
-                    designer: "Bob",
-                    duration_weeks: 3,
-                    enrolled_count: 12,
-                },
-            ];
-            setLessons(mockLessons);
-        }
+    if (willOpen) {
+      const mockLessons = [
+        {
+          lesson_id: "L1",
+          title: "Intro",
+          designer: "Alice",
+          duration_weeks: 2,
+          enrolled_count: 10,
+          average_progress: 0.5,
+        },
+        {
+          lesson_id: "L2",
+          title: "Advanced",
+          designer: "Bob",
+          duration_weeks: 3,
+          enrolled_count: 12,
+          average_progress: 0.8,
+        },
+      ];
+      setLessons(mockLessons);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      setLoading(true);
+      try {
+        const mockCourse = {
+          course_id: courseId,
+          course_title:
+            courseId === "CS101"
+              ? "Intro to Computer Science"
+              : "Data Structures",
+          course_credits: courseId === "CS101" ? 3 : 4,
+          students_enrolled: courseId === "CS101" ? 25 : 30,
+          average_progress: courseId === "CS101" ? 0.45 : 0.78,
+          course_director: "Dr. Smith",
+        };
+        setCourse(mockCourse);
+
+        const mockStudents = [
+          {
+            id: "S1",
+            name: "Alice Tan",
+            gmail: "alice.tan@gmail.com",
+            lessons_completed: 4,
+            total_lessons: 5,
+            credits_earned: 12,
+            progress: 0.8,
+            enrolled_date: "2025-01-02",
+            enrolledCourses: [],
+          },
+          {
+            id: "S2",
+            name: "Bob Lee",
+            gmail: "bob.lee@gmail.com",
+            lessons_completed: 3,
+            total_lessons: 5,
+            credits_earned: 9,
+            progress: 0.6,
+            enrolled_date: "2023-01-02",
+            enrolledCourses: [],
+          },
+          {
+            id: "S3",
+            name: "Chloe Wong",
+            gmail: "chloe.wong@gmail.com",
+            lessons_completed: 2,
+            total_lessons: 5,
+            credits_earned: 6,
+            progress: 0.4,
+            enrolled_date: "2025-01-02",
+            enrolledCourses: [],
+          },
+          {
+            id: "S4",
+            name: "Daniel Lim",
+            gmail: "daniel.lim@gmail.com",
+            lessons_completed: 5,
+            total_lessons: 5,
+            credits_earned: 15,
+            progress: 1.0,
+            enrolled_date: "2023-01-02",
+            enrolledCourses: [],
+          },
+        ];
+        setStudents(mockStudents);
+      } catch (err) {
+        console.error("Failed to fetch course details", err);
+        alert("Failed to load course details.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    useEffect(() => {
-        const fetchCourse = async () => {
-            setLoading(true);
-            try {
-                const mockCourse = {
-                    course_id: courseId,
-                    course_title:
-                        courseId === "CS101"
-                            ? "Intro to Computer Science"
-                            : "Data Structures",
-                    course_credits: courseId === "CS101" ? 3 : 4,
-                    students_enrolled: courseId === "CS101" ? 25 : 30,
-                    average_progress: courseId === "CS101" ? 0.45 : 0.78,
-                    course_director: "Dr. Smith", // added mock director
-                };
-                setCourse(mockCourse);
+    fetchCourse();
+  }, [courseId]);
 
-                const mockStudents = [
-                    {
-                        id: "S1",
-                        name: "Alice Tan",
-                        gmail: "alice.tan@gmail.com",
-                        lessons_completed: 4,
-                        total_lessons: 5,
-                        credits_earned: 12,
-                        progress: 0.8,
-                        enrolled_date: "2025-01-02",
-                        enrolledCourses: [
-                            {
-                                courseCode: "CS101",
-                                courseTitle: "Intro to Computer Science",
-                                progress: 0.8,
-                                lessonsCompleted: 4,
-                                totalLessons: 5,
-                                enrolledDate: "2025-01-02",
-                            },
-                            {
-                                courseCode: "CS102",
-                                courseTitle: "Data Structures",
-                                progress: 0.6,
-                                lessonsCompleted: 2,
-                                totalLessons: 4,
-                                enrolledDate: "2025-03-10",
-                            },
-                        ],
-                    },
-                    {
-                        id: "S2",
-                        name: "Bob Lee",
-                        gmail: "bob.lee@gmail.com",
-                        lessons_completed: 3,
-                        total_lessons: 5,
-                        credits_earned: 9,
-                        progress: 0.6,
-                        enrolled_date: "2023-01-02",
-                        enrolledCourses: [
-                            {
-                                courseCode: "CS101",
-                                courseTitle: "Intro to Computer Science",
-                                progress: 0.8,
-                                lessonsCompleted: 4,
-                                totalLessons: 5,
-                                enrolledDate: "2025-01-02",
-                            },
-                            {
-                                courseCode: "CS102",
-                                courseTitle: "Data Structures",
-                                progress: 0.6,
-                                lessonsCompleted: 2,
-                                totalLessons: 4,
-                                enrolledDate: "2025-03-10",
-                            },
-                        ],
-                    },
-                    {
-                        id: "S3",
-                        name: "Chloe Wong",
-                        gmail: "chloe.wong@gmail.com",
-                        lessons_completed: 2,
-                        total_lessons: 5,
-                        credits_earned: 6,
-                        progress: 0.4,
-                        enrolled_date: "2025-01-02",
-                        enrolledCourses: [
-                            {
-                                courseCode: "CS101",
-                                courseTitle: "Intro to Computer Science",
-                                progress: 0.8,
-                                lessonsCompleted: 4,
-                                totalLessons: 5,
-                                enrolledDate: "2025-01-02",
-                            },
-                            {
-                                courseCode: "CS102",
-                                courseTitle: "Data Structures",
-                                progress: 0.6,
-                                lessonsCompleted: 2,
-                                totalLessons: 4,
-                                enrolledDate: "2025-03-10",
-                            },
-                        ],
-                    },
-                    {
-                        id: "S4",
-                        name: "Daniel Lim",
-                        gmail: "daniel.lim@gmail.com",
-                        lessons_completed: 5,
-                        total_lessons: 5,
-                        credits_earned: 15,
-                        progress: 1.0,
-                        enrolled_date: "2023-01-02",
-                        enrolledCourses: [
-                            {
-                                courseCode: "CS101",
-                                courseTitle: "Intro to Computer Science",
-                                progress: 0.8,
-                                lessonsCompleted: 4,
-                                totalLessons: 5,
-                                enrolledDate: "2025-01-02",
-                            },
-                            {
-                                courseCode: "CS102",
-                                courseTitle: "Data Structures",
-                                progress: 0.6,
-                                lessonsCompleted: 2,
-                                totalLessons: 4,
-                                enrolledDate: "2025-03-10",
-                            },
-                        ],
-                    },
-                ];
-                setStudents(mockStudents);
-            } catch (err) {
-                console.error("Failed to fetch course details", err);
-                alert("Failed to load course details.");
-            } finally {
-                setLoading(false);
-            }
-        };
+  if (loading) return <div>Loading course details…</div>;
+  if (!course) return <div>No course found.</div>;
 
-        fetchCourse();
-    }, [courseId]);
+  const sortedStudents = [...students].sort((a, b) =>
+    sortHighToLow ? b.progress - a.progress : a.progress - b.progress
+  );
 
-    if (loading) return <div>Loading course details…</div>;
-    if (!course) return <div>No course found.</div>;
+  const sortedLessons = [...lessons].sort((a, b) =>
+    sortHighToLow ? b.duration_weeks - a.duration_weeks : a.duration_weeks - b.duration_weeks
+  );
 
-    const sortedStudents = [...students].sort((a, b) =>
-        sortHighToLow ? b.progress - a.progress : a.progress - b.progress,
-    );
-
-    const sortedLessons = [...lessons].sort((a, b) => {
-        const key = "duration_weeks";
-        return sortHighToLow ? b[key] - a[key] : a[key] - b[key];
-    });
-
-    const totalProgress =
+  const totalProgress =
     students.length > 0
-        ? students.reduce((sum, student) => sum + (student.progress || 0), 0) /
-          students.length
-        : 0;
+      ? students.reduce((sum, student) => sum + (student.progress || 0), 0) /
+        students.length
+      : 0;
 
-    return (
-        <div className={s.wrap}>
-            <InstructorTopBar />
-            <header className={s.header}>
-                <div
-                    className={s.left}
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                    }}
-                >
-                    <h1 className={s.title}>STUDENT PROGRESS - COURSES</h1>
-                </div>
-            </header>
+  return (
+    <div className={s.wrap}>
+      <InstructorTopBar />
+      <header className={s.header}>
+        <div className={s.left}>
+          <h1 className={s.title}>STUDENT PROGRESS - COURSES</h1>
+        </div>
+      </header>
 
-            <div className={s.container}>
-                <div className={s.card}>
-                    <div className={s.cardTitle}>{course.course_title}</div>
+      <div className={s.container}>
+        <div className={s.card}>
+          <div className={s.cardTitle}>{course.course_title}</div>
 
-                    <div className={s.cardDesc1}>
-                        <span>Code: {course.course_id}</span>
-                        <span style={{ marginLeft: "20px" }}>
-                            Credits: {course.course_credits}
-                        </span>
-                        <span style={{ marginLeft: "20px" }}>
-                            Students: {course.students_enrolled}
-                        </span>
-                    </div>
+          <div className={s.cardDesc1}>
+            <span>Code: {course.course_id}</span>
+            <span>Credits: {course.course_credits}</span>
+            <span>Students: {course.students_enrolled}</span>
+          </div>
 
-                    <div className={s.cardDesc2}>
-    <span>Average Progress:</span>
-    <div
-        style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-        }}
-    >
-        <div
-            style={{
-                flex: 1,
-                height: "12px",
-                background: "#eee",
-                borderRadius: "8px",
-                overflow: "hidden",
-                marginLeft: "8px",
-            }}
-        >
+          <div className={s.cardDesc2}>
+            <span>Average Progress:</span>
+            <div className={s.progressBar}>
+              <div
+                className={s.progressFill}
+                style={{ width: `${totalProgress * 100}%` }}
+              />
+              <span className={s.progressText}>
+                {Math.round(totalProgress * 100)}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className={s.buttonStack}>
+          <Button
+            className={s.enrollBtn}
+            onClick={() => navigate("/instructor/student-progress")}
+          >
+            Back to Course Progress
+          </Button>
+          <Button
+            variant="orange"
+            className={s.enrollBtn}
+            onClick={() => setSortHighToLow(!sortHighToLow)}
+          >
+            Sort {sortHighToLow ? "Low → High" : "High → Low"}
+          </Button>
+        </div>
+      </div>
+
+      <div className={s.wraprow}>
+        <div className={s.row1}>
+          <div
+            className={`${s.panel1} ${
+              activeTab === "students" ? s.tabActive : ""
+            }`}
+            onClick={() =>
+              setActiveTab(activeTab === "students" ? null : "students")
+            }
+          >
+            <h2 className={s.label}>Students</h2>
+          </div>
+
+          <div
+            className={`${s.panel1} ${
+              activeTab === "lessons" ? s.tabActive : ""
+            }`}
+            onClick={handleToggleLessons}
+          >
+            <h2 className={s.label}>Lessons</h2>
+          </div>
+        </div>
+      </div>
+
+      {activeTab === "students" && (
+        <>
+          {sortedStudents.map((student) => (
             <div
-                style={{
-                    width: `${totalProgress * 100}%`,
-                    background: "#7ad1d8",
-                    height: "100%",
-                }}
-            />
+              key={student.id}
+              className={s.card}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "75rem",
+                margin: "1rem auto",
+              }}
+              onClick={() =>
+                navigate(`/instructor/student-progress-detail/${student.id}`)
+              }
+            >
+              <div className={s.studentInfoGroup}>
+                <img
+                  src="/profile_picture.png"
+                  alt="Profile"
+                  className={s.profileLogoTop}
+                />
+                <div className={s.studentInfoText}>
+                  <span className={s.studentName}>
+                    {student.id} - {student.name}
+                  </span>
+                  <span className={s.studentEmail}>{student.gmail}</span>
+                  <span>
+                    Lessons Completed: {student.lessons_completed}/
+                    {student.total_lessons}
+                  </span>
+                  <span>
+                    Credits Earned: {student.credits_earned}/
+                    {course.course_credits * 10}
+                  </span>
+                </div>
+              </div>
+
+              <div className={s.progressColumn}>
+                <div className={s.progressBar}>
+                  <div
+                    className={s.progressFill}
+                    style={{ width: `${student.progress * 100}%` }}
+                  />
+                  <span className={s.progressText}>
+                    {Math.round(student.progress * 100)}%
+                  </span>
+                </div>
+                <span className={s.enrolledText}>
+                  Enrolled: {student.enrolled_date}
+                </span>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
+      {activeTab === "lessons" && (
+  <div className={s.lessonFile}>
+    {sortedLessons.length > 0 ? (
+      sortedLessons.map((lesson, idx) => (
+        <div key={idx} className={s.lessonCard}>
+          {/* Left section: Lesson info */}
+          <div className={s.lessonInfo}>
+            <span className={s.lessonTitle}>
+              {lesson.lesson_id} - {lesson.title}
+            </span>
+            <span className={s.lessonSub}>
+              Students Enrolled: {lesson.enrolled_count}
+            </span>
+          </div>
+
+          {/* Right section: Progress info */}
+          <div className={s.lessonProgress}>
+            <span className={s.lessonAvg}>Average Progress</span>
+            <div className={s.progressContainer}>
+              <div className={s.progressBar}>
+                <div
+                  className={s.progressFillBlue}
+                  style={{ width: `${lesson.average_progress * 100}%` }}
+                />
+              </div>
+              <span className={s.progressTextOutside}>
+                {Math.round(lesson.average_progress * 100)}%
+              </span>
+            </div>
+          </div>
         </div>
-        <span>{Math.round(totalProgress * 100)}%</span>
+      ))
+    ) : (
+      <span className={s.noLessons}>No Lessons</span>
+          )}
+        </div>
+      )}
     </div>
-</div>
-                </div>
-
-                <div className={s.buttonStack}>
-                    <Button
-                        className={s.enrollBtn}
-                        onClick={() => navigate("/instructor/student-progress")}
-                    >
-                        Back to Course Progress
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 8 8 12 12 16" />
-                            <line x1="8" y1="12" x2="16" y2="12" />
-                        </svg>
-                    </Button>
-                    <Button
-                        variant="orange"
-                        className={s.enrollBtn}
-                        onClick={() => setSortHighToLow(!sortHighToLow)}
-                    >
-                        Sort {sortHighToLow ? "Low → High" : "High → Low"}
-                    </Button>
-                </div>
-            </div>
-
-            <div className={s.wraprow}>
-                <div className={s.row1}>
-                    <div
-                        className={`${s.panel1} ${activeTab === "students" ? s.tabActive : ""}`}
-                        onClick={() =>
-                            setActiveTab(
-                                activeTab === "students" ? null : "students",
-                            )
-                        }
-                        style={{ cursor: "pointer" }}
-                    >
-                        <h2 className={s.label}>Students</h2>
-                    </div>
-
-                    <div
-                        className={`${s.panel1} ${activeTab === "lessons" ? s.tabActive : ""}`}
-                        onClick={handleToggleLessons}
-                        style={{ cursor: "pointer" }}
-                    >
-                        <h2 className={s.label}>Lessons</h2>
-                    </div>
-                </div>
-            </div>
-
-            {activeTab === "students" && (
-                <>
-                    {sortedStudents.map((student, idx) => (
-                        <div
-                            key={student.id}
-                            className={s.card}
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                width: "1200px",
-                                margin: "10px auto",
-                                cursor: "pointer",
-                            }}
-                            onClick={() => {
-                                navigate(
-                                    `/instructor/student-progress-detail/${student.id}`,
-                                    {
-                                        state: {
-                                            studentName: student.name,
-                                            studentGmail: student.gmail,
-                                            studentId: student.id,
-                                            enrolledDate: student.enrolled_date,
-                                            enrolledCourses:
-                                                student.enrolledCourses,
-                                        },
-                                    },
-                                );
-                            }}
-                        >
-                            <div className={s.studentInfoGroup}>
-                                <img
-                                    src="/profile_picture.png"
-                                    alt="Profile"
-                                    className={s.profileLogoTop}
-                                />
-                                <div className={s.studentInfoText}>
-                                    <span
-                                        style={{
-                                            fontWeight: "bold",
-                                            fontSize: "20px",
-                                        }}
-                                    >
-                                        {student.id} - {student.name}
-                                    </span>
-                                    <span
-                                        style={{
-                                            fontSize: "14px",
-                                            color: "brown",
-                                        }}
-                                    >
-                                        {student.email ||
-                                            `${student.name.toLowerCase()}@example.com`}
-                                    </span>
-                                    <span
-                                        style={{
-                                            fontSize: "14px",
-                                            color: "brown",
-                                        }}
-                                    >
-                                        Lessons Completed:{" "}
-                                        {student.lessonsCompleted || 3}/
-                                        {student.totalLessons || 5}
-                                    </span>
-                                    <span
-                                        style={{
-                                            fontSize: "14px",
-                                            color: "brown",
-                                        }}
-                                    >
-                                        Credits Earned:{" "}
-                                        {student.creditsEarned || 5}/
-                                        {course.course_credits * 10}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "flex-end",
-                                    minWidth: "200px",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "8px",
-                                        width: "100%",
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            flex: 1,
-                                            height: "12px",
-                                            background: "#eee",
-                                            borderRadius: "8px",
-                                            overflow: "hidden",
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: `${(student.progress || 0) * 100}%`,
-                                                height: "100%",
-                                                background: "#7ad1d8",
-                                            }}
-                                        />
-                                    </div>
-                                    <span>
-                                        {Math.round(
-                                            (student.progress || 0) * 100,
-                                        )}
-                                        %
-                                    </span>
-                                </div>
-                                <span
-                                    style={{
-                                        fontSize: "13px",
-                                        color: "brown",
-                                        marginTop: "6px",
-                                        fontStyle: "italic",
-                                    }}
-                                >
-                                    Enrolled: {student.enrolled_date}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </>
-            )}
-
-            {activeTab === "lessons" && (
-                <div className={s.lessonFile}>
-                    {sortedLessons.length > 0 ? (
-                        sortedLessons.map((lesson, idx) => (
-                            <div
-                                key={idx}
-                                className={s.card}
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    width: "1200px",
-                                    margin: "10px auto",
-                                }}
-                                onClick={() =>
-                                    navigate(
-                                        `/instructor/lesson-progress/course/${course.course_id}/lesson/${lesson.lesson_id}`,
-                                    )
-                                }
-                            >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "4px",
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            fontWeight: "bold",
-                                            fontSize: "20px",
-                                        }}
-                                    >
-                                        {lesson.lesson_id} - {lesson.title}
-                                    </span>
-                                    <span
-                                        style={{
-                                            fontSize: "14px",
-                                            color: "brown",
-                                        }}
-                                    >
-                                        Students Enrolled:{" "}
-                                        {lesson.enrolled_count}
-                                    </span>
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "flex-end",
-                                        minWidth: "200px",
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            fontSize: "14px",
-                                            fontWeight: "600",
-                                            marginBottom: "4px",
-                                            color: "brown",
-                                        }}
-                                    >
-                                        Average Progress
-                                    </span>
-
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "8px",
-                                            width: "100%",
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                flex: 1,
-                                                height: "12px",
-                                                background: "#eee",
-                                                borderRadius: "8px",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <div
-                                                style={{
-                                                    width: `${(lesson.average_progress || 0) * 100}%`,
-                                                    height: "100%",
-                                                    background: "#1a73e8",
-                                                }}
-                                            />
-                                        </div>
-                                        <span>
-                                            {Math.round(
-                                                (lesson.average_progress || 0) *
-                                                    100,
-                                            )}
-                                            %
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <span className={s.noLessons}>No Lessons</span>
-                    )}
-                </div>
-            )}
-        </div>
-    );
+  );
 }
