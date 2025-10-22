@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useEffect } from "react";
 import s from "./StudentTopBar.module.css";
 import ThemeToggle from "../../state/ThemeToggle";
 
 export default function StudentTopBar() {
-  // Ensure theme + role are applied whenever this shell mounts
+  // State for font size slider
+  const [fontSize, setFontSize] = useState(
+    () => parseInt(localStorage.getItem("fontSize")) || 16
+  );
+
+  // Apply role & theme on mount
   useEffect(() => {
     const html = document.documentElement;
 
@@ -13,7 +17,6 @@ export default function StudentTopBar() {
       html.setAttribute("data-role", "student");
     }
 
-    // theme: restore saved, else follow OS preference
     const saved = localStorage.getItem("theme");
     const prefersDark =
       window.matchMedia &&
@@ -25,6 +28,12 @@ export default function StudentTopBar() {
     }
   }, []);
 
+  // Apply font size whenever it changes
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`;
+    localStorage.setItem("fontSize", fontSize);
+  }, [fontSize]);
+
   return (
     <header className={s.topBar}>
       <NavLink to="/" className={s.leftSide}>
@@ -35,7 +44,7 @@ export default function StudentTopBar() {
       <nav className={s.rightSide}>
         <ul className={s.navList}>
           <li className={s.navItem}>
-            <a href="/instructor/course-list" className={s.navLink}>
+            <a href="/student/my-courses" className={s.navLink}>
               Courses
             </a>
           </li>
@@ -61,7 +70,6 @@ export default function StudentTopBar() {
               <span className={s.underline} />
             </NavLink>
           </li>
-
           <li className={s.navItem}>
             <NavLink
               to="/student/reports"
@@ -74,11 +82,12 @@ export default function StudentTopBar() {
             </NavLink>
           </li>
 
-          {/* Theme toggle persists choice via localStorage */}
+          {/* Theme toggle */}
           <li className={s.navItem}>
             <ThemeToggle />
           </li>
 
+          {/* Profile */}
           <li className={s.navItem}>
             <img
               src="/profile_picture.png"
@@ -87,6 +96,8 @@ export default function StudentTopBar() {
             />
             <span className={s.accountText}>Student</span>
           </li>
+
+          {/* Font size slider */}
           <li className={`${s.navItem} ${s.sliderContainer}`}>
             <label htmlFor="fontSizeSlider" className={s.sliderLabel}>
               A
