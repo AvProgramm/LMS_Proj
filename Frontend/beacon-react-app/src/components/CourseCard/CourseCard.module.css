@@ -20,12 +20,14 @@
 .body {
   padding-right: 12px;
 }
+
 .title {
-  margin: 0 0 10px 0;
-  font-size: clamp(18px, 2.6vw, 20px);
+  margin: 0 0 0.625rem;
+  font-size: 1.25rem;
   color: var(--brand-stud-label);
   font-weight: 800;
 }
+
 .metaRow {
   display: flex;
   gap: 28px;

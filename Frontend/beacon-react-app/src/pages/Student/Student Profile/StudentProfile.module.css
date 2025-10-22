@@ -57,7 +57,6 @@
   font-weight: 500;
 }
 
-/* Loading skeletons (optional, looks nice) */
 .skeletonWrap {
   display: grid;
   gap: 10px;
@@ -87,7 +86,6 @@
   }
 }
 
-/* Responsive tweaks */
 @media (max-width: 640px) {
   .card {
     grid-template-columns: 64px 1fr;

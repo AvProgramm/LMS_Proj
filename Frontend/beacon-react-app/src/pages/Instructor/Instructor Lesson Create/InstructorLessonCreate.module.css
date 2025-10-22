@@ -67,7 +67,6 @@ textarea.input {
   resize: none;
 }
 
-/* Buttons */
 .button {
   margin-right: 15px;
   padding: 10px 20px;
@@ -107,7 +106,6 @@ textarea.input {
   margin-top: 20px;
 }
 
-/* Lesson-related */
 .lessonHeader {
   display: flex;
   align-items: center;
@@ -424,8 +422,6 @@ textarea.input {
   background-color: #df714c;
 }
 
-/* Misc */
-/* physical card area */
 .physPanel {
   display: flex;
   flex-direction: column;
@@ -462,7 +458,6 @@ textarea.input {
   font-size: 0.8rem;
 }
 
-/* list popup */
 .pickList {
   display: flex;
   flex-direction: column;

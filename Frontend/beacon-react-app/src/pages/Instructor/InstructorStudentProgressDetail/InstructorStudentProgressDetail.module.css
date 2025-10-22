@@ -1,5 +1,5 @@
 :root {
-  font-size: 16px; /* base scaling for rem */
+  font-size: 16px;
 }
 
 .header {
@@ -130,7 +130,7 @@
 
 .cardDesc2 {
   display: flex;
-  align-items: center; /* ✅ vertically align label + bar */
+  align-items: center;
   justify-content: flex-start;
   width: 100%;
   font-size: 1rem;
@@ -319,7 +319,6 @@
   color: brown;
 }
 
-/* Right section */
 .lessonProgress {
   display: flex;
   flex-direction: column;
@@ -334,7 +333,6 @@
   color: brown;
 }
 
-/* Progress bar container + outside text */
 .progressContainer {
   display: flex;
   align-items: center;
