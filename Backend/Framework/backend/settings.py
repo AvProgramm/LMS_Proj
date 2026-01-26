@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    "ma-thursday2pm-team1-2-1.onrender.com",  # ✅ correct
+    "ma-thursday2pm-team1-2-1.onrender.com",  # correct
     "localhost",
     "127.0.0.1",
 ]
