@@ -481,3 +481,105 @@ class StudentLessonProgress(models.Model):
 
     class Meta:
         unique_together = ('student', 'lesson')
+
+
+# ═══════════════════════════════════════
+# NEW: Course Announcements (Moodle/Google Classroom style)
+# ═══════════════════════════════════════
+class Announcement(models.Model):
+    announcement_id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='announcements')
+    instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    is_pinned = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = True
+        db_table = 'announcement'
+        ordering = ['-is_pinned', '-created_at']
+
+    def __str__(self):
+        return f"{self.title} — {self.course.title}"
+
+
+# ═══════════════════════════════════════
+# NEW: Course Materials (PDFs, links, lecture notes)
+# ═══════════════════════════════════════
+class CourseMaterial(models.Model):
+    class MaterialType(models.TextChoices):
+        PDF = "PDF", "PDF"
+        LINK = "LINK", "Link"
+        VIDEO = "VIDEO", "Video"
+        DOCUMENT = "DOCUMENT", "Document"
+        SLIDES = "SLIDES", "Slides"
+
+    material_id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='materials')
+    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True, blank=True, related_name='materials')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    material_type = models.CharField(max_length=20, choices=MaterialType.choices, default=MaterialType.PDF)
+    file_url = models.TextField()
+    uploaded_by = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'course_material'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.material_type}] {self.title}"
+
+
+# ═══════════════════════════════════════
+# NEW: Grades (University-style gradebook)
+# ═══════════════════════════════════════
+class Grade(models.Model):
+    class GradeLetter(models.TextChoices):
+        HD = "HD", "High Distinction"
+        D = "D", "Distinction"
+        C = "C", "Credit"
+        P = "P", "Pass"
+        N = "N", "Fail"
+        NYG = "NYG", "Not Yet Graded"
+
+    grade_id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='grades')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='grades')
+    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True, blank=True, related_name='grades')
+    assignment = models.ForeignKey(LessonAssignment, on_delete=models.SET_NULL, null=True, blank=True, related_name='grades')
+    score = models.FloatField()
+    max_score = models.FloatField(default=100.0)
+    grade_letter = models.CharField(max_length=3, choices=GradeLetter.choices, default=GradeLetter.NYG)
+    feedback = models.TextField(blank=True, null=True)
+    graded_by = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'grade'
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        # Auto-calculate grade letter from score percentage
+        if self.max_score > 0:
+            pct = (self.score / self.max_score) * 100
+            if pct >= 80:
+                self.grade_letter = 'HD'
+            elif pct >= 70:
+                self.grade_letter = 'D'
+            elif pct >= 60:
+                self.grade_letter = 'C'
+            elif pct >= 50:
+                self.grade_letter = 'P'
+            else:
+                self.grade_letter = 'N'
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.student} — {self.course.title}: {self.score}/{self.max_score} ({self.grade_letter})"
+
