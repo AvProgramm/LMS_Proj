@@ -13,7 +13,7 @@ import dj_database_url
 
 load_dotenv()
 
-print(dj_database_url.config(default=os.environ.get("DATABASE_URL")))
+# Database URL from environment
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
     "ma-thursday2pm-team1-2-1.onrender.com",  # correct
@@ -77,13 +77,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+_db_url = os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3")
+if _db_url.startswith("sqlite"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=_db_url,
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
 
 # Use SQLite for tests
 if 'test' in sys.argv:

@@ -1,5 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./Backend/DB/student/student_"
+    ],
+    "cursorpyright.analysis.extraPaths": [
+        "./Backend/DB/student/student_"
     ]
 }

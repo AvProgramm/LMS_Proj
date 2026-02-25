@@ -1,16 +1,31 @@
+/* ═══════════════════════
+   Student TopBar — Premium
+   ═══════════════════════ */
+
 .topBar {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: clamp(12px, 2vw, 15px) 4rem;
-  background: var(--brand-stud-pale-gradient);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 0 clamp(20px, 3vw, 48px);
+  height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background var(--dur-slow) var(--ease-smooth),
+    border-color var(--dur-slow) var(--ease-smooth);
+}
+
+html[data-theme="dark"] .topBar {
+  background: rgba(21, 26, 44, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .leftSide {
@@ -21,8 +36,21 @@
   color: inherit;
 }
 
+.logo {
+  height: clamp(32px, 5vh, 48px);
+  width: auto;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+.leftSide:hover .logo {
+  transform: scale(1.05);
+}
+
 .title {
-  font-size: clamp(16px, 2vw, 24px);
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--brand-stud-title, var(--text));
 }
 
 .rightSide {
@@ -33,7 +61,7 @@
 .navList {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 2vw, 32px);
+  gap: clamp(8px, 1.5vw, 24px);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -45,38 +73,81 @@
   align-items: center;
   cursor: pointer;
   font-weight: 500;
-  font-size: clamp(14px, 1.8vw, 18px);
-  color: var(--brand-student-subtitle);
-}
-
-.profileLogoTop {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-bottom: 4px;
-}
-
-.accountText {
-  font-size: clamp(12px, 1.5vw, 14px);
-}
-
-.leftSide {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  height: clamp(28px, 12vh, 80px);
-  width: auto;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
 }
 
 .navLink {
   text-decoration: none;
-  color: var(--brand-stud-link);
-  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--dur-fast),
+    background var(--dur-fast);
+  position: relative;
 }
+
 .navLink:hover {
-  color: var(--brand-stud-link-hover);
-  opacity: 87%;
+  color: var(--brand-stud-title, var(--primary));
+  background: rgba(0, 151, 178, 0.06);
+}
+
+.navLink.active {
+  color: var(--brand-stud-title, var(--primary));
+  font-weight: 600;
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: var(--brand-stud-title, var(--primary));
+  border-radius: 1px;
+}
+
+.underline {
+  display: none;
+  /* replaced by ::after on active */
+}
+
+.profileLogoTop {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  object-fit: cover;
+  transition: border-color var(--dur-fast);
+}
+
+.profileLogoTop:hover {
+  border-color: var(--brand-stud-title, var(--primary));
+}
+
+.accountText {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .topBar {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .navLink {
+    padding: 6px 8px;
+    font-size: var(--fs-xs);
+  }
+
+  .title {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+  }
 }

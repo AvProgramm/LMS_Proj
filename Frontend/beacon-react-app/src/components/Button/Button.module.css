@@ -1,41 +1,130 @@
+/* ═══════════════════════
+   Button — Premium
+   ═══════════════════════ */
+
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 16px 20px;
+  padding: 16px 24px;
   border: none;
-  border-radius: 9999px;
-  font-weight: 700;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-base);
   color: #fff;
-  box-shadow: var(--shadow-1);
   cursor: pointer;
-  transition: transform 0.08s ease, background 0.2s ease;
-}
-.btn:active {
-  transform: translateY(1px);
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    box-shadow var(--dur-med) var(--ease-smooth),
+    background var(--dur-med) var(--ease-smooth),
+    filter var(--dur-fast);
 }
 
-.teal {
-  background: var(--brand-teal);
+/* Ripple overlay */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
+      rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
 }
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Variants ── */
+.teal {
+  background: linear-gradient(135deg, #176978, #1a8a9d);
+  box-shadow: 0 4px 16px rgba(23, 105, 120, 0.3);
+}
+
 .teal:hover {
-  background: var(--brand-teal-600);
+  background: linear-gradient(135deg, #145a67, #176978);
 }
 
 .orange {
-  background: var(--brand-orange);
-}
-.orange:hover {
-  background: var(--brand-orange-600);
+  background: linear-gradient(135deg, #ef8f4a, #f0a060);
+  box-shadow: 0 4px 16px rgba(239, 143, 74, 0.3);
 }
 
-.aqua {
-  background: var(--brand-aqua);
-  color: #08343a;
+.orange:hover {
+  background: linear-gradient(135deg, #e47f33, #ef8f4a);
 }
 
 .green {
-  background: var(--brand-green);
-  color: #22711a;
+  background: linear-gradient(135deg, #73cc50, #8fd86a);
+  color: #1a4a14;
+  box-shadow: 0 4px 16px rgba(115, 204, 80, 0.3);
 }
+
 .green:hover {
-  background: var(--brand-green-600);
+  background: linear-gradient(135deg, #5cb83a, #73cc50);
+}
+
+.aqua {
+  background: linear-gradient(135deg, #6dc7d3, #84d8e2);
+  color: #08343a;
+  box-shadow: 0 4px 16px rgba(109, 199, 211, 0.3);
+}
+
+.aqua:hover {
+  background: linear-gradient(135deg, #5bb2be, #6dc7d3);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+/* ── Loading spinner ── */
+.loading {
+  pointer-events: none;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
